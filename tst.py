@@ -114,11 +114,49 @@ def run():
     images_path = "..\pins-face-recognition\PINS\pins_zendaya"
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
     # getting 3 random images 
-    sample = random.sample(files, 3)
+    sample = random.sample(files, 1)
+    print(sample)
+    print(sample[0])
     
     #batch_extractor(images_path)
 
     ma = Matcher("features.pck")
+    
+    #print(ma.matrix)
+    #print(ma.names)
+
+    index = 0
+    while(ma.names[index]!=sample[0].lower()):
+        index += 1
+    
+    print(index)
+
+    #cosine similarity
+    cosine = [0 for i in range(len(ma.matrix))]
+    for i in range(len(ma.matrix)):
+        cosine[i] = 1-cosine_similarity(ma.matrix[index], ma.matrix[i])
+    cosine = np.array(cosine)
+    print(cosine)
+
+    #euclidean distance
+    dist = [0 for i in range(len(ma.matrix))]
+    for i in range(len(ma.matrix)):
+        dist[i] = euclidean_distance(ma.matrix[index], ma.matrix[i])
+    dist = np.array(dist)
+    print(dist)
+
+    top = int(input("Masukkan banyak: "))
+
+    # *** ID *** #
+    ncosine = np.argsort(cosine)[:top].tolist()
+    ndist = np.argsort(dist)[:top].tolist()
+    print(ncosine)
+    print(ndist)
+
+
+    print(ma.matrix[index])
+    print(ma.names[index])
+    
     
     for s in sample:
         print ("Query image ==========================================")
