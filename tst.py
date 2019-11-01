@@ -79,6 +79,32 @@ class Matcher(object):
 
         return nearest_img_paths, img_distances[nearest_ids].tolist()
 
+
+def cosine_similarity(arrsample, arrextract):
+    dot=0
+    for i in range(len(arrsample)):
+        dotopr = arrsample[i]*arrextract[i]
+        dot += dotopr
+    normsample = 0
+    for i in range(len(arrsample)):
+        x = arrsample[i]**2
+        normsample += x
+    normextract = 0
+    for i in range(len(arrsample)):
+        x = arrextract[i]**2
+        normextract += x
+    normsample = normsample**0.5
+    normextract = normextract**0.5
+    return(dot/(normextract*normsample))
+
+def euclidean_distance(arrsample, arrextract):
+    sum=0
+    temp=0
+    for i in range(len(arrsample)):
+        temp = (arrsample[i] - arrextract[i])**2
+        sum += temp
+    return(sum**0.5)
+
 def show_img(path):
     img = imread(path)
     plt.imshow(img)
@@ -90,7 +116,7 @@ def run():
     # getting 3 random images 
     sample = random.sample(files, 3)
     
-    batch_extractor(images_path)
+    #batch_extractor(images_path)
 
     ma = Matcher("features.pck")
     
