@@ -125,6 +125,7 @@ def run():
     #print(ma.matrix)
     #print(ma.names)
 
+    # *** MATCHER ***#
     index = 0
     while(ma.names[index]!=sample[0].lower()):
         index += 1
@@ -145,19 +146,29 @@ def run():
     dist = np.array(dist)
     print(dist)
 
-    top = int(input("Masukkan banyak: "))
 
     # *** ID *** #
+    top = int(input("Masukkan banyak: "))
     ncosine = np.argsort(cosine)[:top].tolist()
     ndist = np.argsort(dist)[:top].tolist()
     print(ncosine)
     print(ndist)
 
-
-    print(ma.matrix[index])
-    print(ma.names[index])
+    # *** SHOW RESULT *** #
+    for s in sample:
+        print("Random image ===========================")
+        show_img(s)
+        print("Result image ===========================")
+        for i in range(top):
+            j=0
+            while(j!=ncosine[i]):
+                j+=1
+            show_img(os.path.join(ma.names[j]))
     
+    #print(ma.matrix[index])
+    #print(ma.names[index])
     
+    """
     for s in sample:
         print ("Query image ==========================================")
         show_img(s)
@@ -168,5 +179,6 @@ def run():
             # more they similar, thus we subtruct it from 1 to get match value
             print ("Match %s" % (1-match[i]))
             show_img(os.path.join(names[i]))
+    """
 
 run()
