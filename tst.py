@@ -33,18 +33,21 @@ def extract_features(image_path, vector_size=32):
             # end of our feature vector
             dsc = np.concatenate([dsc, np.zeros(needed_size - dsc.size)])
     except cv2.error as e:
-        print ("Error: ", e)
+        #print ("Error: ", e)
         return None
 
     return dsc
 
 
-def batch_extractor(images_path, pickled_db_path="features.pck"):
+def batch_extractor(images_path, pickled_db_path="referensi.pck"):
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
 
     result = {}
+    i=1
     for f in files:
         print ("Extracting features from image %s" % f)
+        print (i)
+        i+=1
         name = f.split('/')[-1].lower()
         result[name] = extract_features(f)
     
@@ -111,17 +114,20 @@ def show_img(path):
     plt.show()
     
 def run():
-    images_path = "..\pins-face-recognition\PINS\pins_zendaya"
+    images_path = "..\Database Tugas Besar\Data Referensi"
+    #images_path = "..\pins-face-recognition\PINS\pins_zendaya"
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
     # getting 3 random images 
     sample = random.sample(files, 1)
+    """
     print(sample)
     print(sample[0])
-    
-    #batch_extractor(images_path)
+    """
+    batch_extractor(images_path)
 
-    ma = Matcher("features.pck")
+    ma = Matcher("uji.pck")
     
+    """
     #print(ma.matrix)
     #print(ma.names)
 
@@ -154,6 +160,7 @@ def run():
     print(ncosine)
     print(ndist)
 
+    
     # *** SHOW RESULT *** #
     for s in sample:
         print("Random image ===========================")
@@ -167,7 +174,6 @@ def run():
     
     #print(ma.matrix[index])
     #print(ma.names[index])
-    
     """
     for s in sample:
         print ("Query image ==========================================")
@@ -179,6 +185,5 @@ def run():
             # more they similar, thus we subtruct it from 1 to get match value
             print ("Match %s" % (1-match[i]))
             show_img(os.path.join(names[i]))
-    """
 
 run()

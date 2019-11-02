@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from scipy import spatial
 
 # *** IMAGE EXTRACTOR *** #
-# Image extractor ini memanfaatkan library OpenCV2
+# Image extractor memanfaatkan library OpenCV2
 def extract_image(image_path, vector_size=32):
     # Extractor menggunakan fungsi yang terdapat pada KAZE
     image = imread(image_path)
@@ -35,77 +35,141 @@ def extract_image(image_path, vector_size=32):
     except cv2.error as e:
         print ("Error: ", e)
         return None
-
     return descriptor
 
-
-def batch_extractor(images_path, pickled_db_path="features.pck"):
+# *** DATABASE PACKAGE *** #
+# Paket database dibungkus menjadi file database.pck
+def batch_extractor(images_path, pickled_db_path):
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
+        # Membaca direktori image dan dimasukkan ke files=array[]
 
     result = {}
     for f in files:
+        # Membaca seluruh isi gambar dan dimasukkan ke result=array[] sebagai database in array 
         print ("Extracting features from image %s" % f)
         name = f.split('/')[-1].lower()
         result[name] = extract_image(f)
     
-    # saving all our feature vectors in pickled file
+    # Menyimpan semua vektor yang dibaca menjadi file database.pck
+    # Memanfaatkan library pickle
     with open(pickled_db_path, 'wb') as fp:
         pickle.dump(result, fp)
 
+# *** IMAGE MATCHER *** #
+# Mencocokkan foto uji dengan foto referensi
 class Matcher(object):
 
-    def __init__(self, pickled_db_path="features.pck"):
+    # * Initiation * #
+    def __init__(self, pickled_db_path="database.pck"):
+        # Membentuk array vector dan array names
         with open(pickled_db_path, 'rb') as fp:
             self.data = pickle.load(fp)
         self.names = []
-        self.matrix = []
+        self.vector = []
         for k, v in self.data.items():
             self.names.append(k)
-            self.matrix.append(v)
-        self.matrix = np.array(self.matrix)
+            self.vector.append(v)
+        self.vector = np.array(self.vector)
         self.names = np.array(self.names)
 
-    def cos_cdist(self, vector):
-        # getting cosine distance between search image and images database
-        v = vector.reshape(1, -1)
-        return scipy.spatial.distance.cdist(self.matrix, v, "cosine").reshape(-1)
-
-    def match(self, image_path, topn=5):
-        features = extract_image(image_path)
-        img_distances = self.cos_cdist(features)
-        # getting top 5 records
-        nearest_ids = np.argsort(img_distances)[:topn].tolist()
-        nearest_img_paths = self.names[nearest_ids].tolist()
-
-        return nearest_img_paths, img_distances[nearest_ids].tolist()
-
-
-def cosine_similarity(arrsample, arrextract):
+# *** VECTOR OPERATION *** #
+# * Cosine Similarity * #
+def cosine_similarity(arrSample, arrReference):
+    # Menghitung kedekatan 2 vektor gambar dengan cosine similarity
+    # Semakin mendekati 1, semakin mirip kedua gambar tersebut
+    # Semakin mendekati 0, semakin tidak mirip kedua gambar tersebut
     dot=0
-    for i in range(len(arrsample)):
-        dotopr = arrsample[i]*arrextract[i]
-        dot += dotopr
-    normsample = 0
-    for i in range(len(arrsample)):
-        x = arrsample[i]**2
-        normsample += x
-    normextract = 0
-    for i in range(len(arrsample)):
-        x = arrextract[i]**2
-        normextract += x
-    normsample = normsample**0.5
-    normextract = normextract**0.5
-    return(dot/(normextract*normsample))
+    for i in range(len(arrSample)):
+        muldot = arrSample[i]*arrReference[i]
+        dot += muldot
+    lenSample = 0
+    for i in range(len(arrSample)):
+        x = arrSample[i]**2
+        lenSample += x
+    lenReference = 0
+    for i in range(len(arrSample)):
+        x = arrReference[i]**2
+        lenReference += x
+    lenSample = lenSample**0.5
+    lenReference = lenReference**0.5
+    return(dot/(lenReference*lenSample))
 
-def euclidean_distance(arrsample, arrextract):
+# * Euclidean Distance * #
+def euclidean_distance(arrSample, arrReference):
+    # Menghitung kedekatan 2 vektor gambar dengan euclidean distance
+    # Semakin kecil nilai jarak, semakin mirip kedua gambar tersebut
+    # Semakin besar nilai jarak, semakin tidak mirip kedua gambar tersebut
     sum=0
     temp=0
-    for i in range(len(arrsample)):
-        temp = (arrsample[i] - arrextract[i])**2
+    for i in range(len(arrSample)):
+        temp = (arrSample[i] - arrReference[i])**2
         sum += temp
     return(sum**0.5)
 
+def match(operation, arrSample, arrReference):
+    # Memilah gambar referensi yang cocok dengan gambar uji
+    if(operation==1): # Cosine Similarity
+        cosine = [0 for i in range(len(arrReference))]
+        for i in range(len(arrSample)):
+            cosine[i] = 1-cosine_similarity(arrSample, arrReference[i])
+        cosine = np.array(cosine)
+    else if(operation==2):  # Euclidean Distance
+        dist = [0 for i in range(len(arrReference))]
+        for i in range(len(arrReference)):
+            dist[i] = euclidean_distance(arrSample, arrReference[i])
+        dist = np.array(dist)
+
+    features = extract_image(image_path)
+    img_distances = self.cos_cdist(features)
+    # getting top 5 records
+    nearest_ids = np.argsort(img_distances)[:topn].tolist()
+    nearest_img_paths = self.names[nearest_ids].tolist()
+
+    return nearest_img_paths, img_distances[nearest_ids].tolist()
+
 def show_img(path):
+    # Menampilkan gambar ke layar
     img = imread(path)
     plt.imshow(img)
     plt.show()
+
+def menu():
+    print("Ada 2 metode pencocokan wajah")
+    print("1. Cosine Similarity")
+    print("2. Euclidean Distance")
+
+def run():
+    images_path = "..\pins-face-recognition\PINS\pins_zendaya"
+    files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
+    
+    batch_extractor(images_path, "uji.pck")
+    batch_extractor(images_path, "referensi.pck")
+
+
+    uji = Matcher("uji.pck")
+    ref = Matcher("referensi.pck")
+
+    
+    print("===========================================")
+    print("SELAMAT DATANG DI APLIKASI FACE RECOGNITION")
+    print("===========================================")
+    print()
+    menu()
+    loop = True
+    while(loop):
+        select = input("Masukkan pilihan metode pencocokan")
+        if(select==1 | select==2):
+            # Mendapatkan gambar uji secara acak
+            sample = random.sample(files, 1)
+            # Get Index Sample
+            # Mencari index sample di dalam array uji
+            idSample = 0
+            while(uji.names[idSample] != sample[0].lower()):
+                idSample += 1
+            # Mencocokkan gambar uji dengan gambar referensi
+            match(select, uji.vector[idSample], ref.vector)
+        else if(select==3):
+            loop=False
+        else:
+            print("Pilihan salah")
+    
