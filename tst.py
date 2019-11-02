@@ -78,6 +78,7 @@ class Matcher(object):
         img_distances = self.cos_cdist(features)
         # getting top 5 records
         nearest_ids = np.argsort(img_distances)[:topn].tolist()
+        print(nearest_ids)
         nearest_img_paths = self.names[nearest_ids].tolist()
 
         return nearest_img_paths, img_distances[nearest_ids].tolist()
@@ -114,8 +115,8 @@ def show_img(path):
     plt.show()
     
 def run():
-    images_path = "..\Database Tugas Besar\Data Referensi"
-    #images_path = "..\pins-face-recognition\PINS\pins_zendaya"
+    #images_path = "..\Database Tugas Besar\Data Referensi"
+    images_path = "..\pins-face-recognition\PINS\pins_zendaya"
     files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
     # getting 3 random images 
     sample = random.sample(files, 1)
@@ -123,9 +124,9 @@ def run():
     print(sample)
     print(sample[0])
     """
-    batch_extractor(images_path)
+    #batch_extractor(images_path)
 
-    ma = Matcher("uji.pck")
+    ma = Matcher("features.pck")
     
     """
     #print(ma.matrix)

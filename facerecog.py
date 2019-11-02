@@ -60,7 +60,7 @@ def batch_extractor(images_path, pickled_db_path):
 class Matcher(object):
 
     # * Initiation * #
-    def __init__(self, pickled_db_path="database.pck"):
+    def __init__(self, pickled_db_path):
         # Membentuk array vector dan array names
         with open(pickled_db_path, 'rb') as fp:
             self.data = pickle.load(fp)
@@ -110,22 +110,22 @@ def match(operation, arrSample, arrReference):
     # Memilah gambar referensi yang cocok dengan gambar uji
     if(operation==1): # Cosine Similarity
         cosine = [0 for i in range(len(arrReference))]
-        for i in range(len(arrSample)):
+        for i in range(len(arrReference)):
             cosine[i] = 1-cosine_similarity(arrSample, arrReference[i])
         cosine = np.array(cosine)
-    else if(operation==2):  # Euclidean Distance
+        return cosine
+
+    else: # Euclidean Distance
         dist = [0 for i in range(len(arrReference))]
         for i in range(len(arrReference)):
             dist[i] = euclidean_distance(arrSample, arrReference[i])
         dist = np.array(dist)
+        return dist
 
-    features = extract_image(image_path)
-    img_distances = self.cos_cdist(features)
-    # getting top 5 records
-    nearest_ids = np.argsort(img_distances)[:topn].tolist()
-    nearest_img_paths = self.names[nearest_ids].tolist()
-
-    return nearest_img_paths, img_distances[nearest_ids].tolist()
+def sortTop(arrMatch, top):
+    # Mengurutkan hasil yang paling cocok sebanyak topn
+    near_id = np.argsort(arrMatch)[:top].tolist()
+    return near_id
 
 def show_img(path):
     # Menampilkan gambar ke layar
@@ -139,17 +139,16 @@ def menu():
     print("2. Euclidean Distance")
 
 def run():
-    images_path = "..\pins-face-recognition\PINS\pins_zendaya"
-    files = [os.path.join(images_path, p) for p in sorted(os.listdir(images_path))]
+    path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
+    path_ref = "..\pins-face-recognition\PINS\pins_zendaya"
+    file_sample = [os.path.join(path_uji, p) for p in sorted(os.listdir(path_uji))]
     
-    batch_extractor(images_path, "uji.pck")
-    batch_extractor(images_path, "referensi.pck")
-
+    #batch_extractor(path_uji, "uji.pck")
+    #batch_extractor(path_ref, "referensi.pck")
 
     uji = Matcher("uji.pck")
     ref = Matcher("referensi.pck")
 
-    
     print("===========================================")
     print("SELAMAT DATANG DI APLIKASI FACE RECOGNITION")
     print("===========================================")
@@ -157,19 +156,40 @@ def run():
     menu()
     loop = True
     while(loop):
-        select = input("Masukkan pilihan metode pencocokan")
-        if(select==1 | select==2):
+        select = int(input("Masukkan pilihan metode pencocokan: "))
+        if(select==1 or select==2):
             # Mendapatkan gambar uji secara acak
-            sample = random.sample(files, 1)
+            sample = random.sample(file_sample, 1)
+
             # Get Index Sample
             # Mencari index sample di dalam array uji
             idSample = 0
             while(uji.names[idSample] != sample[0].lower()):
                 idSample += 1
+
             # Mencocokkan gambar uji dengan gambar referensi
-            match(select, uji.vector[idSample], ref.vector)
-        else if(select==3):
+            result = match(select, uji.vector[idSample], ref.vector)
+
+            # Mencetak hasil gambar yang paling cocok sebanyak T gambar
+            T = int(input("Masukkan banyaknya hasil: "))
+            near_id = sortTop(result, T)
+            print(near_id)
+            for s in sample:
+                print("===========================================")
+                print("SAMPLE IMAGE")
+                print("File name: "+ sample[0])
+                show_img(sample[0])
+                print("===========================================")
+                print("===========================================")
+                print("RESULT IMAGE")
+                print("===========================================")
+                for i in range(T):
+                    print(str(i+1) + ". " + ref.names[near_id[i]])
+                    show_img(os.path.join(ref.names[near_id[i]]))
+
+        elif(select==3):
             loop=False
         else:
             print("Pilihan salah")
     
+run()
