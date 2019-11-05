@@ -7,6 +7,7 @@ import random
 import os
 import matplotlib.pyplot as plt
 from scipy import spatial
+import math
 
 # *** IMAGE EXTRACTOR *** #
 # Image extractor memanfaatkan library OpenCV2
@@ -74,25 +75,26 @@ class Matcher(object):
 
 # *** VECTOR OPERATION *** #
 # * Cosine Similarity * #
+def dotProduct(arrSample, arrReference):
+    # Menghitung hasil perkalian dot product
+    dot = 0
+    for i in range(len(arrSample)):
+        mul = arrSample[i]*arrReference[i]
+        dot += mul
+    return dot
+def lenVector(vector):
+    # Menghitung panjang vektor
+    panjang = 0
+    for i in range(len(vector)):
+        power = pow(vector[i], 2)
+        panjang += power
+    return math.sqrt(panjang)
 def cosine_similarity(arrSample, arrReference):
     # Menghitung kedekatan 2 vektor gambar dengan cosine similarity
     # Semakin mendekati 1, semakin mirip kedua gambar tersebut
     # Semakin mendekati 0, semakin tidak mirip kedua gambar tersebut
-    dot=0
-    for i in range(len(arrSample)):
-        muldot = arrSample[i]*arrReference[i]
-        dot += muldot
-    lenSample = 0
-    for i in range(len(arrSample)):
-        x = arrSample[i]**2
-        lenSample += x
-    lenReference = 0
-    for i in range(len(arrSample)):
-        x = arrReference[i]**2
-        lenReference += x
-    lenSample = lenSample**0.5
-    lenReference = lenReference**0.5
-    return(dot/(lenReference*lenSample))
+    cdist = dotProduct(arrSample, arrReference)/(lenVector(arrSample)*lenVector(arrReference))
+    return cdist
 
 # * Euclidean Distance * #
 def euclidean_distance(arrSample, arrReference):
@@ -125,7 +127,6 @@ def match(operation, arrSample, arrReference):
 def sortTop(arrMatch, top):
     # Mengurutkan hasil yang paling cocok sebanyak topn
     near_id = np.argsort(arrMatch)[:top].tolist()
-    print(near_id)
     return near_id
 
 def show_img(path):
@@ -178,7 +179,6 @@ def run():
             # Mencetak hasil gambar yang paling cocok sebanyak T gambar
             T = int(input("Masukkan banyaknya hasil: "))
             near_id = sortTop(result, T)
-            print(near_id)
             for s in sample:
                 print("===========================================")
                 print("SAMPLE IMAGE")

@@ -10,17 +10,13 @@ def browse_button():
     folder_path.set(filename)
 
 def browse_file():
-    global canv, filename, canv2
+    global canv, filename
     filename = filedialog.askopenfilename(initialdir = folder_path, title = "Select File", filetype = (("jpeg files","*.jpg"),("all files","*.*")))
     photo = ImageTk.PhotoImage(Image.open(filename))
     canv = Canvas(window, height=1000, width=1000)
     canv.grid(columnspan=2, row=3)
     canv.create_image(20,20,anchor='nw',image=photo)
     canv.image=photo
-    canv2 = Canvas(window, height=1000, width=1000)
-    canv2.grid(columnspan=2, row=2)
-    canv2.create_image(20,20,anchor='nw',image=photo)
-    canv2.image=photo
     print(folder_path)
     print(filename)
 
