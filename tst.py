@@ -80,7 +80,6 @@ class Matcher(object):
         nearest_ids = np.argsort(img_distances)[:topn].tolist()
         print(nearest_ids)
         nearest_img_paths = self.names[nearest_ids].tolist()
-
         return nearest_img_paths, img_distances[nearest_ids].tolist()
 
 
@@ -111,7 +110,10 @@ def euclidean_distance(arrsample, arrextract):
 
 def show_img(path):
     img = imread(path)
-    plt.imshow(img)
+    kaze = cv2.KAZE_create()
+    kp = kaze.detect(img,None)
+    img2 = cv2.drawKeypoints(img,kp,outImage=None,flags=0,color=(0,255,0))
+    plt.imshow(img2)
     plt.show()
     
 def run():
@@ -180,6 +182,8 @@ def run():
         print ("Query image ==========================================")
         show_img(s)
         names, match = ma.match(s, topn=3)
+        print(names)
+        print(match)
         print ("Result images ========================================")
         for i in range(3):
             # we got cosine distance, less cosine distance between vectors

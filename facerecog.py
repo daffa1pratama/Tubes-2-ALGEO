@@ -31,7 +31,7 @@ def extract_image(image_path, vector_size=32):
         needed_size = (vector_size * 64)
         if descriptor.size < needed_size:
             # Jika terdapat hanya 32 descriptor, vektor sisanya dibuat 0
-            descriptor = np.concatenate([dsc, np.zeros(needed_size - descriptor.size)])
+            descriptor = np.concatenate([descriptor, np.zeros(needed_size - descriptor.size)])
     except cv2.error as e:
         print ("Error: ", e)
         return None
@@ -125,6 +125,7 @@ def match(operation, arrSample, arrReference):
 def sortTop(arrMatch, top):
     # Mengurutkan hasil yang paling cocok sebanyak topn
     near_id = np.argsort(arrMatch)[:top].tolist()
+    print(near_id)
     return near_id
 
 def show_img(path):
@@ -139,15 +140,19 @@ def menu():
     print("2. Euclidean Distance")
 
 def run():
-    path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
-    path_ref = "..\pins-face-recognition\PINS\pins_zendaya"
+    path_uji = "..\Database Tugas Besar\Data Uji"
+    path_ref = "..\Database Tugas Besar\Data Referensi"
+    #path_uji = r"..\pins-face-recognition\PINS\pins_zendaya1\uji"
+    #path_ref = r"..\pins-face-recognition\Pins\pins_zendaya1\referensi"
     file_sample = [os.path.join(path_uji, p) for p in sorted(os.listdir(path_uji))]
     
-    #batch_extractor(path_uji, "uji.pck")
-    #batch_extractor(path_ref, "referensi.pck")
+    #batch_extractor(path_uji, "ujiAsli.pck")
+    #batch_extractor(path_ref, "referensiAsli.pck")
 
-    uji = Matcher("uji.pck")
-    ref = Matcher("referensi.pck")
+    uji = Matcher("ujiAsli.pck")
+    ref = Matcher("referensiAsli.pck")
+    #uji = Matcher("ujiz.pck")
+    #ref = Matcher("referensiz.pck")
 
     print("===========================================")
     print("SELAMAT DATANG DI APLIKASI FACE RECOGNITION")
@@ -184,7 +189,11 @@ def run():
                 print("RESULT IMAGE")
                 print("===========================================")
                 for i in range(T):
-                    print(str(i+1) + ". " + ref.names[near_id[i]])
+                    if(select==1):
+                        near_dist = 1-result[near_id[i]]
+                    elif(select==2):
+                        near_dist = result[near_id[i]]
+                    print(str(i+1) + ". " + ref.names[near_id[i]] + " : " + str(near_dist))
                     show_img(os.path.join(ref.names[near_id[i]]))
 
         elif(select==3):
