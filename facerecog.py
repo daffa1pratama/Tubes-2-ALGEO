@@ -16,7 +16,7 @@ def extract_image(image_path, vector_size=32):
     image = imread(image_path)
     try:
         # * Konstruktor KAZE * #
-        root = cv2.KAZE_create()
+        root = cv2.ORB_create()
 
         # * Detector keypoint * #
         # Membentuk keypoints yang terdapat pada foto wajah
@@ -115,6 +115,7 @@ def match(operation, arrSample, arrReference):
         for i in range(len(arrReference)):
             cosine[i] = 1-cosine_similarity(arrSample, arrReference[i])
         cosine = np.array(cosine)
+        print(cosine)
         return cosine
 
     else: # Euclidean Distance
@@ -143,17 +144,17 @@ def menu():
 def run():
     path_uji = "..\Database Tugas Besar\Data Uji"
     path_ref = "..\Database Tugas Besar\Data Referensi"
-    #path_uji = r"..\pins-face-recognition\PINS\pins_zendaya1\uji"
-    #path_ref = r"..\pins-face-recognition\Pins\pins_zendaya1\referensi"
+    #path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
+    #path_ref = "..\pins-face-recognition\Pins\pins_zendaya"
     file_sample = [os.path.join(path_uji, p) for p in sorted(os.listdir(path_uji))]
     
-    #batch_extractor(path_uji, "ujiAsli.pck")
-    #batch_extractor(path_ref, "referensiAsli.pck")
+    #batch_extractor(path_uji, "ujiorb.pck")
+    #batch_extractor(path_ref, "referensiorb.pck")
 
-    uji = Matcher("ujiAsli.pck")
-    ref = Matcher("referensiAsli.pck")
-    #uji = Matcher("ujiz.pck")
-    #ref = Matcher("referensiz.pck")
+    #uji = Matcher("ujiAsli.pck")
+    #ref = Matcher("referensiAsli.pck")
+    uji = Matcher("ujiorb.pck")
+    ref = Matcher("referensiorb.pck")
 
     print("===========================================")
     print("SELAMAT DATANG DI APLIKASI FACE RECOGNITION")
@@ -174,11 +175,17 @@ def run():
                 idSample += 1
 
             # Mencocokkan gambar uji dengan gambar referensi
-            result = match(select, uji.vector[idSample], ref.vector)
+            #result = match(select, uji.vector[idSample], ref.vector)
+            result1 = match(1, uji.vector[idSample], ref.vector)
+            result2 = match(2, uji.vector[idSample], ref.vector)
 
             # Mencetak hasil gambar yang paling cocok sebanyak T gambar
             T = int(input("Masukkan banyaknya hasil: "))
-            near_id = sortTop(result, T)
+            #near_id = sortTop(result, T)
+            near_id1 = sortTop(result1, T)
+            near_id2 = sortTop(result2, T)
+            print(near_id1)
+            print(near_id2)
             for s in sample:
                 print("===========================================")
                 print("SAMPLE IMAGE")
@@ -190,11 +197,11 @@ def run():
                 print("===========================================")
                 for i in range(T):
                     if(select==1):
-                        near_dist = 1-result[near_id[i]]
+                        near_dist = 1-result1[near_id1[i]]
                     elif(select==2):
-                        near_dist = result[near_id[i]]
-                    print(str(i+1) + ". " + ref.names[near_id[i]] + " : " + str(near_dist))
-                    show_img(os.path.join(ref.names[near_id[i]]))
+                        near_dist = result2[near_id2[i]]
+                    print(str(i+1) + ". " + ref.names[near_id1[i]] + " : " + str(near_dist))
+                    show_img(os.path.join(ref.names[near_id1[i]]))
 
         elif(select==3):
             loop=False
