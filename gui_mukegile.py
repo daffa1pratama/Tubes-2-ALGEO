@@ -19,13 +19,6 @@ def browse_button():
     filename = filedialog.askdirectory()
     folder_path.set(filename)
 
-def getEntryTop():
-    global T
-    T = topn.get()
-    print(T)
-    label = Label(window, text=T)
-    label.pack()
-
 window=Tk()
 window.geometry("750x750")
 window.title("Face Recognition Bray")
@@ -34,28 +27,55 @@ window.config(bg="black")
 folder_path = StringVar()
 topn = StringVar()
 
-labell = Label(window, text = "Welcome to Face Recognition", fg='black', bg ='blue' ,relief = 'solid', bd = 5, font=("Arial",28,"bold")).pack()
-labelll = Label(window, text = "Made by MukeGile ©", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("Arial",18,"bold")).pack()
+labell = Label(window, text = "Welcome to Face Recognition", fg='black', bg ='blue' ,relief = 'solid', bd = 5, font=("arial",28,"bold")).pack()
+LabelRecognizer = Label(window, text = "Made by MukeGile ©", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",18,"bold")).pack()
 img = ImageTk.PhotoImage(Image.open("face.jpg"))
 imglabel = Label(window, image=img).pack()
 labelT = Label(window, text = "Masukkan Nilai T", fg='white', bg='black', relief='solid', font=('Arial', 10, 'bold'))
 labelT.place(x=50, y=550)
 
-button1=Button(window, text = "Cari Foto!", fg='black', bg ='blue', activebackground = "black", command=fileDialog , relief = RAISED, bd = 2, font=("Arial",20,"bold"))
+button1=Button(window, text = "Cari Foto!", fg='black', bg ='blue', activebackground = "black", command=fileDialog , relief = RAISED, bd = 2, font=("arial",20,"bold"))
 button1.place(x=50, y=400)
-button2=Button(window, text = "Cari Folder!", fg='black', bg ='blue', relief = RAISED, command = browse_button, bd = 2, font=("Arial",20,"bold"))
-button2.place(x=50, y=480)
-button2=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', relief = RAISED, bd = 2, font=("Arial",28,"bold"))
-button2.place(x=50, y=680)
-button_cosine = Button(window, text = "Cosine Similarity", fg = 'black', bg = 'blue', relief = RAISED, font=("Arial",14,"bold"))
-button_cosine.place(x=50, y=620)
-button_euclid = Button(window, text = "Euclidean Distance", fg = 'black', bg = 'blue', relief = RAISED, font=("Arial",14,"bold"))
-button_euclid.place(x=300, y=620)
+button2=Button(window, text = "Cari Folder!", fg='black', bg ='blue', relief = RAISED, command = browse_button, bd = 2, font=("arial",20,"bold"))
+button2.place(x=50, y=460)
+LabelRecognizer = Label(window, text = "Select Recognizer :", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",22,"bold"))
+LabelRecognizer.place(x=50, y= 510)
+LabelHowMany = Label(window, text = "How Many Muke you want to cari brow?!?", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",10,"bold"))
+LabelHowMany.place(x = 50, y = 630)
 
-entryTop = Entry(window, textvariable=topn)
-entryTop.place(x=50, y=580)
-buttonTop = Button(window, command=getEntryTop, text="Enter")
-buttonTop.place(x=250, y=575)
+v = IntVar()
+def ShowChoice():
+    print(v.get())
+    global inputselect
+    inputselect = v.get()
+
+
+R1 = Radiobutton(window, 
+              text="Cosine Similarity",
+              padx = 40, 
+              font=("arial",15,"italic"),
+              activebackground = "black",
+              activeforeground = "blue",
+              bg = "black",
+              fg = "blue",
+              indicator = 0,
+              variable=v, 
+              value=1)
+R1.place(x=50, y= 550)
+R2 = Radiobutton(window, 
+              text="Euclidean Distance",
+              font=("arial",15,"italic"),
+              activebackground = "black",
+              activeforeground = "blue",
+              bg = "black",
+              fg = "blue",
+              indicator = 0,
+              padx = 40, 
+              variable=v, 
+              value=2)
+R2.place(x=50, y= 590)
+#button3=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', relief = RAISED, bd = 2, font=("arial",28,"bold"))
+#button3.place(x=50, y=580)
 
 window.mainloop()
  
