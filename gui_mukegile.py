@@ -34,7 +34,7 @@ imglabel = Label(window, image=img).pack()
 labelT = Label(window, text = "Masukkan Nilai T", fg='white', bg='black', relief='solid', font=('Arial', 10, 'bold'))
 labelT.place(x=50, y=550)
 
-button1=Button(window, text = "Cari Foto!", fg='black', bg ='blue', activebackground = "black", command=fileDialog , relief = RAISED, bd = 2, font=("arial",20,"bold"))
+button1=Button(window, text = "Cari Foto!", fg='black', bg ='blue', command=fileDialog , relief = RAISED, bd = 2, font=("arial",20,"bold"))
 button1.place(x=50, y=400)
 button2=Button(window, text = "Cari Folder!", fg='black', bg ='blue', relief = RAISED, command = browse_button, bd = 2, font=("arial",20,"bold"))
 button2.place(x=50, y=460)
@@ -48,7 +48,6 @@ def ShowChoice():
     print(v.get())
     global inputselect
     inputselect = v.get()
-
 
 R1 = Radiobutton(window, 
               text="Cosine Similarity",
@@ -74,8 +73,9 @@ R2 = Radiobutton(window,
               variable=v, 
               value=2)
 R2.place(x=50, y= 590)
-#button3=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', relief = RAISED, bd = 2, font=("arial",28,"bold"))
-#button3.place(x=50, y=580)
+
+button3=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', relief = RAISED, bd = 2, font=("arial",28,"bold"))
+button3.place(x=50, y=680)
 
 window.mainloop()
  

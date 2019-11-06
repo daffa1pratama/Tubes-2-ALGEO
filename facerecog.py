@@ -142,19 +142,19 @@ def menu():
     print("2. Euclidean Distance")
 
 def run():
-    path_uji = "..\Database Tugas Besar\Data Uji"
-    path_ref = "..\Database Tugas Besar\Data Referensi"
-    #path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
-    #path_ref = "..\pins-face-recognition\Pins\pins_zendaya"
+    #path_uji = "..\Database Tugas Besar\Data Uji"
+    #path_ref = "..\Database Tugas Besar\Data Referensi"
+    path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
+    path_ref = "..\pins-face-recognition\Pins\pins_zendaya"
     file_sample = [os.path.join(path_uji, p) for p in sorted(os.listdir(path_uji))]
     
     #batch_extractor(path_uji, "ujiorb.pck")
     #batch_extractor(path_ref, "referensiorb.pck")
 
-    #uji = Matcher("ujiAsli.pck")
-    #ref = Matcher("referensiAsli.pck")
-    uji = Matcher("ujiorb.pck")
-    ref = Matcher("referensiorb.pck")
+    uji = Matcher("uji.pck")
+    ref = Matcher("referensi.pck")
+    #uji = Matcher("ujiorb.pck")
+    #ref = Matcher("referensiorb.pck")
 
     print("===========================================")
     print("SELAMAT DATANG DI APLIKASI FACE RECOGNITION")
@@ -180,7 +180,7 @@ def run():
             result2 = match(2, uji.vector[idSample], ref.vector)
 
             # Mencetak hasil gambar yang paling cocok sebanyak T gambar
-            T = int(input("Masukkan banyaknya hasil: "))
+            #T = int(input("Masukkan banyaknya hasil: "))
             #near_id = sortTop(result, T)
             near_id1 = sortTop(result1, T)
             near_id2 = sortTop(result2, T)
@@ -207,5 +207,3 @@ def run():
             loop=False
         else:
             print("Pilihan salah")
-    
-run()
