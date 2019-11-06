@@ -41,16 +41,54 @@ window.config(bg="black")
 folder_path = StringVar()
 
 labell = Label(window, text = "Welcome to Face Recognition", fg='black', bg ='blue' ,relief = 'solid', bd = 5, font=("arial",28,"bold")).pack()
-labelll = Label(window, text = "Made by MukeGile ©", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",18,"bold")).pack()
+LabelRecognizer = Label(window, text = "Made by MukeGile ©", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",18,"bold")).pack()
 img = ImageTk.PhotoImage(Image.open("face.jpg"))
 imglabel = Label(window, image=img).pack()
+
+
 
 button1=Button(window, text = "Cari Foto!", fg='black', bg ='blue', activebackground = "black", command=fileDialog , relief = RAISED, bd = 2, font=("arial",20,"bold"))
 button1.place(x=50, y=400)
 button2=Button(window, text = "Cari Folder!", fg='black', bg ='blue', relief = RAISED, command = browse_button, bd = 2, font=("arial",20,"bold"))
-button2.place(x=50, y=480)
-button2=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', relief = RAISED, bd = 2, font=("arial",28,"bold"))
-button2.place(x=50, y=580)
+button2.place(x=50, y=460)
+LabelRecognizer = Label(window, text = "Select Recognizer :", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",22,"bold"))
+LabelRecognizer.place(x=50, y= 510)
+LabelHowMany = Label(window, text = "How Many Muke you want to cari brow?!?", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",10,"bold"))
+LabelHowMany.place(x = 50, y = 630)
+
+v = IntVar()
+def ShowChoice():
+    print(v.get())
+    global inputselect
+    inputselect = v.get()
+
+
+R1 = Radiobutton(window, 
+              text="Cosine Similarity",
+              padx = 40, 
+              font=("arial",15,"italic"),
+              activebackground = "black",
+              activeforeground = "blue",
+              bg = "black",
+              fg = "blue",
+              indicator = 0,
+              variable=v, 
+              value=1)
+R1.place(x=50, y= 550)
+R2 = Radiobutton(window, 
+              text="Euclidean Distance",
+              font=("arial",15,"italic"),
+              activebackground = "black",
+              activeforeground = "blue",
+              bg = "black",
+              fg = "blue",
+              indicator = 0,
+              padx = 40, 
+              variable=v, 
+              value=2)
+R2.place(x=50, y= 590)
+#button3=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', relief = RAISED, bd = 2, font=("arial",28,"bold"))
+#button3.place(x=50, y=580)
 
 window.mainloop()
  
