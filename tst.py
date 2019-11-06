@@ -130,7 +130,6 @@ def run():
 
     ma = Matcher("features.pck")
     
-    """
     #print(ma.matrix)
     #print(ma.names)
 
@@ -174,6 +173,7 @@ def run():
             while(j!=ncosine[i]):
                 j+=1
             show_img(os.path.join(ma.names[j]))
+            print(cosine[ncosine[i]])
     
     #print(ma.matrix[index])
     #print(ma.names[index])
@@ -190,5 +190,5 @@ def run():
             # more they similar, thus we subtruct it from 1 to get match value
             print ("Match %s" % (1-match[i]))
             show_img(os.path.join(names[i]))
-
+    """
 run()
