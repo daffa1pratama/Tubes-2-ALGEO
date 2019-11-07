@@ -22,14 +22,12 @@ def browse_uji():
     path_uji = filedialog.askdirectory()
     folder_path.set(path_uji)
     path_uji = path_uji.replace("/","\\")
-    print(path_uji)
 
 # * Browse Reference Path * #
 def browse_ref():
     global path_ref
     path_ref = filedialog.askdirectory()
     path_ref = path_ref.replace("/","\\")
-    print(path_ref)
 
 # * Recognize Image * #
 def recognize():

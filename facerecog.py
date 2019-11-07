@@ -115,7 +115,6 @@ def match(operation, arrSample, arrReference):
         for i in range(len(arrReference)):
             cosine[i] = 1-cosine_similarity(arrSample, arrReference[i])
         cosine = np.array(cosine)
-        print(cosine)
         return cosine
 
     else: # Euclidean Distance
@@ -138,8 +137,8 @@ def show_img(path,i):
 
 def run(sample, T, select, path_uji, path_ref):    
     # Extractor Uji & Reference
-    batch_extractor(path_uji, "uji.pck")
-    batch_extractor(path_ref, "referensi.pck")
+    #batch_extractor(path_uji, "uji.pck")
+    #batch_extractor(path_ref, "referensi.pck")
 
     # Make Object Uji & Reference
     uji = Matcher("uji.pck")
@@ -163,8 +162,7 @@ def run(sample, T, select, path_uji, path_ref):
             near_dist = 1-result[near_id[i]]
         elif(select==2):
             near_dist = result[near_id[i]]
-        print(str(i+1) + ". " + ref.names[near_id[i]] + " : " + str(near_dist))
         img = imread(os.path.join(ref.names[near_id[i]]))
-        plt.figure(i).suptitle(str(i+1) + ". " + ref.names[near_id[i]].replace("c:\\users\\asus\\desktop\\database tugas besar\\data referensi\\", "") + "\n" + str(near_dist))
+        plt.figure(i).suptitle(str(i+1) + ". " + ref.names[near_id[i]] + "\n" + str(near_dist))
         plt.imshow(img)
     plt.show()
