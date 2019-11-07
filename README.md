@@ -14,6 +14,7 @@ Program ini dibuat menggunakan bahasa python dengan penggunaan library-library y
 - Tkinter
 - Scipy
 - Numpy
+
 Secara garis besar, program ini dapat mencocokkan gambar wajah seseorang dengan gambar wajah lain atau yang kini dikenal dengan teknologi Face Recognition atau Pengenalan Wajah. Face Recognition yang diimplementasikan dalam program ini menggunakan library OpenCV untuk mengekstraksi gambar wajah menjadi titik-titik vektor. Vektor tersebut nantinya akan dibandingkan dengan vektor pada gambar lain dengan metode cosine similarity dan euclidean distance. Program akan menampilkan hasil gambar termirip dengan gambar uji yang diberikan pengguna
 
 *Program ini tidak sesempurna Face Recognition pada Machine Learning, sehingga seringkali terjadi ketidakcocokan dalam menggunakan program.
