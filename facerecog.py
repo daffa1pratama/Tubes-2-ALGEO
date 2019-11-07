@@ -48,7 +48,7 @@ def batch_extractor(images_path, pickled_db_path):
     for f in files:
         # Membaca seluruh isi gambar dan dimasukkan ke result=array[] sebagai database in array 
         print ("Extracting features from image %s" % f)
-        name = f.split('/')[-1].lower()
+        name = f.split('/')[-1]
         result[name] = extract_image(f)
     
     # Menyimpan semua vektor yang dibaca menjadi file database.pck
@@ -130,7 +130,7 @@ def sortTop(arrMatch, top):
     near_id = np.argsort(arrMatch)[:top].tolist()
     return near_id
 
-def show_img(path):
+def show_img(path,i):
     # Menampilkan gambar ke layar
     img = imread(path)
     plt.imshow(img)
@@ -141,69 +141,44 @@ def menu():
     print("1. Cosine Similarity")
     print("2. Euclidean Distance")
 
-def run():
-    #path_uji = "..\Database Tugas Besar\Data Uji"
-    #path_ref = "..\Database Tugas Besar\Data Referensi"
-    path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
-    path_ref = "..\pins-face-recognition\Pins\pins_zendaya"
+def run(sample, T, select):
+    path_uji = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Uji"
+    path_ref = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Referensi"
+    #path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
+    #path_ref = "..\pins-face-recognition\Pins\pins_zendaya"
     file_sample = [os.path.join(path_uji, p) for p in sorted(os.listdir(path_uji))]
     
     #batch_extractor(path_uji, "ujiorb.pck")
     #batch_extractor(path_ref, "referensiorb.pck")
 
-    uji = Matcher("uji.pck")
-    ref = Matcher("referensi.pck")
-    #uji = Matcher("ujiorb.pck")
-    #ref = Matcher("referensiorb.pck")
+    #uji = Matcher("uji.pck")
+    #ref = Matcher("referensi.pck")
+    uji = Matcher("ujiorb.pck")
+    ref = Matcher("referensiorb.pck")
 
-    print("===========================================")
-    print("SELAMAT DATANG DI APLIKASI FACE RECOGNITION")
-    print("===========================================")
-    print()
-    menu()
-    loop = True
-    while(loop):
-        select = int(input("Masukkan pilihan metode pencocokan: "))
-        if(select==1 or select==2):
-            # Mendapatkan gambar uji secara acak
-            sample = random.sample(file_sample, 1)
+    print(sample[0])
+    print(uji.names[100])
 
-            # Get Index Sample
-            # Mencari index sample di dalam array uji
-            idSample = 0
-            while(uji.names[idSample] != sample[0].lower()):
-                idSample += 1
+    # Get Index Sample
+    # Mencari index sample di dalam array uji
+    idSample = 0
+    while(uji.names[idSample] != sample[0]):
+        idSample += 1
 
-            # Mencocokkan gambar uji dengan gambar referensi
-            #result = match(select, uji.vector[idSample], ref.vector)
-            result1 = match(1, uji.vector[idSample], ref.vector)
-            result2 = match(2, uji.vector[idSample], ref.vector)
+    # Mencocokkan gambar uji dengan gambar referensi
+    result = match(select, uji.vector[idSample], ref.vector)
 
-            # Mencetak hasil gambar yang paling cocok sebanyak T gambar
-            #T = int(input("Masukkan banyaknya hasil: "))
-            #near_id = sortTop(result, T)
-            near_id1 = sortTop(result1, T)
-            near_id2 = sortTop(result2, T)
-            print(near_id1)
-            print(near_id2)
-            for s in sample:
-                print("===========================================")
-                print("SAMPLE IMAGE")
-                print("File name: "+ sample[0])
-                show_img(sample[0])
-                print("===========================================")
-                print("===========================================")
-                print("RESULT IMAGE")
-                print("===========================================")
-                for i in range(T):
-                    if(select==1):
-                        near_dist = 1-result1[near_id1[i]]
-                    elif(select==2):
-                        near_dist = result2[near_id2[i]]
-                    print(str(i+1) + ". " + ref.names[near_id1[i]] + " : " + str(near_dist))
-                    show_img(os.path.join(ref.names[near_id1[i]]))
+    # Mencetak hasil gambar yang paling cocok sebanyak T gambar
+    near_id = sortTop(result, T)
 
-        elif(select==3):
-            loop=False
-        else:
-            print("Pilihan salah")
+    for i in range(T):
+        if(select==1):
+            near_dist = 1-result[near_id[i]]
+        elif(select==2):
+            near_dist = result[near_id[i]]
+        print(str(i+1) + ". " + ref.names[near_id[i]] + " : " + str(near_dist))
+        #show_img(os.path.join(ref.names[near_id[i]]), i)
+        img = imread(os.path.join(ref.names[near_id[i]]))
+        plt.figure(i)
+        plt.imshow(img)
+    plt.show()
