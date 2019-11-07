@@ -16,7 +16,7 @@ def extract_image(image_path, vector_size=32):
     image = imread(image_path)
     try:
         # * Konstruktor KAZE * #
-        root = cv2.ORB_create()
+        root = cv2.KAZE_create()
 
         # * Detector keypoint * #
         # Membentuk keypoints yang terdapat pada foto wajah
@@ -60,7 +60,7 @@ def batch_extractor(images_path, pickled_db_path):
 # Mencocokkan foto uji dengan foto referensi
 class Matcher(object):
 
-    # * Initiation * #
+    # * Make Array of Files* #
     def __init__(self, pickled_db_path):
         # Membentuk array vector dan array names
         with open(pickled_db_path, 'rb') as fp:
@@ -136,25 +136,14 @@ def show_img(path,i):
     plt.imshow(img)
     plt.show()
 
-def menu():
-    print("Ada 2 metode pencocokan wajah")
-    print("1. Cosine Similarity")
-    print("2. Euclidean Distance")
+def run(sample, T, select, path_uji, path_ref):    
+    # Extractor Uji & Reference
+    batch_extractor(path_uji, "uji.pck")
+    batch_extractor(path_ref, "referensi.pck")
 
-def run(sample, T, select, path_uji, path_ref):
-    #path_uji = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Uji"
-    #path_ref = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Referensi"
-    #path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
-    #path_ref = "..\pins-face-recognition\Pins\pins_zendaya"
-    file_sample = [os.path.join(path_uji, p) for p in sorted(os.listdir(path_uji))]
-    
-    #batch_extractor(path_uji, "ujiorb.pck")
-    #batch_extractor(path_ref, "referensiorb.pck")
-
-    #uji = Matcher("uji.pck")
-    #ref = Matcher("referensi.pck")
-    uji = Matcher("ujiorb.pck")
-    ref = Matcher("referensiorb.pck")
+    # Make Object Uji & Reference
+    uji = Matcher("uji.pck")
+    ref = Matcher("referensi.pck")
 
     # Get Index Sample
     # Mencari index sample di dalam array uji
@@ -168,13 +157,13 @@ def run(sample, T, select, path_uji, path_ref):
     # Mencetak hasil gambar yang paling cocok sebanyak T gambar
     near_id = sortTop(result, T)
 
+    # Menampilkan hasil gambar ke layar
     for i in range(T):
         if(select==1):
             near_dist = 1-result[near_id[i]]
         elif(select==2):
             near_dist = result[near_id[i]]
         print(str(i+1) + ". " + ref.names[near_id[i]] + " : " + str(near_dist))
-        #show_img(os.path.join(ref.names[near_id[i]]), i)
         img = imread(os.path.join(ref.names[near_id[i]]))
         plt.figure(i).suptitle(str(i+1) + ". " + ref.names[near_id[i]].replace("c:\\users\\asus\\desktop\\database tugas besar\\data referensi\\", "") + "\n" + str(near_dist))
         plt.imshow(img)

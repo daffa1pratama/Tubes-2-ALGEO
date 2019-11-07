@@ -3,9 +3,11 @@ from tkinter import filedialog
 from PIL import ImageTk, Image
 import facerecog as main
 
+# *** FUNCTION *** #
+# * Browse Sample Image * #
 def fileDialog():
-    global canvasImg, sample
-    sample = [filedialog.askopenfilename(initialdir =  path_uji, title = "Pilih Foto MukeGile", filetype =
+    global sample
+    sample = [filedialog.askopenfilename(initialdir = folder_path, title = "Pilih Foto MukeGile", filetype =
     (("jpeg files","*.jpg"),("all files","*.*")))]
     photo = ImageTk.PhotoImage(Image.open(sample[0]))
     canvImg = Canvas(window,height=250,width=250)
@@ -14,25 +16,32 @@ def fileDialog():
     canvImg.image = photo
     sample[0] = sample[0].replace("/","\\")
 
+# * Browse Sample Path * #
 def browse_uji():
-    global path_uji
-    filename = filedialog.askdirectory()
-    path_uji.set(filename)
+    global path_uji, folder_path
+    path_uji = filedialog.askdirectory()
+    folder_path.set(path_uji)
+    path_uji = path_uji.replace("/","\\")
+    print(path_uji)
 
+# * Browse Reference Path * #
 def browse_ref():
     global path_ref
-    filename = filedialog.askdirectory()
-    path_ref.set(filename)
+    path_ref = filedialog.askdirectory()
+    path_ref = path_ref.replace("/","\\")
+    print(path_ref)
 
+# * Recognize Image * #
 def recognize():
     global T, select
     T = int(EntryJumlah.get())
     select = Metode.get()
     main.run(sample, T, select, path_uji, path_ref)
 
+# *** GUI LAYOUTING *** #
 window=Tk()
 window.geometry("750x750")
-window.title("Face Recognition Bray")
+window.title("Face Recognition by Muke Gile")
 
 window.config(bg="black")
 folder_path = StringVar()
@@ -85,8 +94,6 @@ R2.place(x=50, y= 570)
 
 EntryJumlah = Entry(window)
 EntryJumlah.place(x = 60, y = 630)
-
-
 
 window.mainloop()
  
