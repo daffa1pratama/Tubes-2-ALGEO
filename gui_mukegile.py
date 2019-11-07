@@ -5,7 +5,7 @@ import facerecog as main
 
 def fileDialog():
     global canvasImg, sample
-    sample = [filedialog.askopenfilename(initialdir =  folder_path, title = "Pilih Foto MukeGile", filetype =
+    sample = [filedialog.askopenfilename(initialdir =  path_uji, title = "Pilih Foto MukeGile", filetype =
     (("jpeg files","*.jpg"),("all files","*.*")))]
     photo = ImageTk.PhotoImage(Image.open(sample[0]))
     canvImg = Canvas(window,height=250,width=250)
@@ -13,18 +13,22 @@ def fileDialog():
     canvImg.create_image(0,0,anchor='nw', image=photo)
     canvImg.image = photo
     sample[0] = sample[0].replace("/","\\")
-"""
-def browse_button():
-    global folder_path
+
+def browse_uji():
+    global path_uji
     filename = filedialog.askdirectory()
-    folder_path.set(filename)
-"""
+    path_uji.set(filename)
+
+def browse_ref():
+    global path_ref
+    filename = filedialog.askdirectory()
+    path_ref.set(filename)
 
 def recognize():
     global T, select
     T = int(EntryJumlah.get())
     select = Metode.get()
-    main.run(sample, T, select)
+    main.run(sample, T, select, path_uji, path_ref)
 
 window=Tk()
 window.geometry("750x750")
@@ -41,16 +45,18 @@ imglabel = Label(window, image=img).pack()
 labelT = Label(window, text = "Masukkan Nilai T", fg='white', bg='black', relief='solid', font=('Arial', 10, 'bold'))
 labelT.place(x=50, y=550)
 
-button1=Button(window, text = "Cari Foto!", fg='black', bg ='blue', activebackground = "black", command=fileDialog , relief = RAISED, bd = 2, font=("arial",15,"bold"))
-button1.place(x=50, y=400)
-button2=Button(window, text = "Cari Folder!", fg='black', bg ='blue', relief = RAISED, bd = 2, font=("arial",15,"bold"))
-button2.place(x=50, y=440)
-button3=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', command = recognize, relief = RAISED, bd = 2, font=("arial",12))
-button3.place(x=200, y=605)
+button_sample=Button(window, text = "Browse Photo", fg='black', bg ='blue', activebackground = "black", command=fileDialog , relief = RAISED, bd = 2, font=("arial",15,"bold"))
+button_sample.place(x=50, y=460)
+button_uji=Button(window, text = "Browse Sample", fg='black', bg ='blue', relief = RAISED, bd = 2, font=("arial",15,"bold"), command=browse_uji)
+button_uji.place(x=250, y=400)
+button_ref=Button(window, text = "Browse Reference", fg='black', bg ='blue', relief = RAISED, bd = 2, font=("arial",15,"bold"), command=browse_ref)
+button_ref.place(x=50, y=400)
+button_recognize=Button(window, text = "RECOGNIZE ME!", fg='blue', bg ='black', command = recognize, relief = RAISED, bd = 2, font=("arial",15))
+button_recognize.place(x=200, y=625)
 LabelRecognizer = Label(window, text = "Select Recognizer :", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",15,"bold"))
-LabelRecognizer.place(x=50, y= 480)
-LabelHowMany = Label(window, text = "How Many Muke you want to cari brow?!?", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",10,"bold"))
-LabelHowMany.place(x = 50, y = 575)
+LabelRecognizer.place(x=50, y= 500)
+LabelHowMany = Label(window, text = "How many result do you want ?", fg='blue', bg ='black' ,relief = 'solid', bd = 5, font=("arial",10,"bold"))
+LabelHowMany.place(x = 50, y = 595)
 
 Metode = IntVar()
 
@@ -64,7 +70,7 @@ R1 = Radiobutton(window,
               fg = "blue",
               variable=Metode, 
               value=1)
-R1.place(x=50, y= 520)
+R1.place(x=50, y= 540)
 R2 = Radiobutton(window, 
               text="Euclidean Distance",
               font=("arial",10,"italic"),
@@ -75,10 +81,10 @@ R2 = Radiobutton(window,
               padx = 30, 
               variable=Metode, 
               value=2)
-R2.place(x=50, y= 550)
+R2.place(x=50, y= 570)
 
 EntryJumlah = Entry(window)
-EntryJumlah.place(x = 60, y = 610)
+EntryJumlah.place(x = 60, y = 630)
 
 
 

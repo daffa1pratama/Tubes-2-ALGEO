@@ -141,9 +141,9 @@ def menu():
     print("1. Cosine Similarity")
     print("2. Euclidean Distance")
 
-def run(sample, T, select):
-    path_uji = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Uji"
-    path_ref = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Referensi"
+def run(sample, T, select, path_uji, path_ref):
+    #path_uji = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Uji"
+    #path_ref = r"C:\Users\ASUS/Desktop\Database Tugas Besar\Data Referensi"
     #path_uji = "..\pins-face-recognition\PINS\pins_zendaya"
     #path_ref = "..\pins-face-recognition\Pins\pins_zendaya"
     file_sample = [os.path.join(path_uji, p) for p in sorted(os.listdir(path_uji))]
@@ -155,9 +155,6 @@ def run(sample, T, select):
     #ref = Matcher("referensi.pck")
     uji = Matcher("ujiorb.pck")
     ref = Matcher("referensiorb.pck")
-
-    print(sample[0])
-    print(uji.names[100])
 
     # Get Index Sample
     # Mencari index sample di dalam array uji
@@ -179,6 +176,6 @@ def run(sample, T, select):
         print(str(i+1) + ". " + ref.names[near_id[i]] + " : " + str(near_dist))
         #show_img(os.path.join(ref.names[near_id[i]]), i)
         img = imread(os.path.join(ref.names[near_id[i]]))
-        plt.figure(i)
+        plt.figure(i).suptitle(str(i+1) + ". " + ref.names[near_id[i]].replace("c:\\users\\asus\\desktop\\database tugas besar\\data referensi\\", "") + "\n" + str(near_dist))
         plt.imshow(img)
     plt.show()
